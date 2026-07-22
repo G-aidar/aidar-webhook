@@ -1,6 +1,5 @@
 // api/submit-form.js
 // Endpoint para o formulário de qualificação da Aidar Mídia Digital
-// Adicionar este arquivo em: aidar-webhook/api/submit-form.js
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -17,6 +16,9 @@ export default async function handler(req, res) {
       email,
       instagram,
       faturamento,
+      segmento,
+      investiu_trafego,
+      verba_mensal,
       utm_source,
       utm_medium,
       utm_campaign,
@@ -47,7 +49,7 @@ export default async function handler(req, res) {
     const personData = await personRes.json()
     const personId   = personData.data?.id
 
-    // 2. Criar Deal — mesmo formato do site: "Nome — faturamento"
+    // 2. Criar Deal
     const dealRes = await fetch(`${BASE}/deals?api_token=${API_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -62,9 +64,12 @@ export default async function handler(req, res) {
     const dealData = await dealRes.json()
     const dealId   = dealData.data?.id
 
-    // 3. Criar Nota — mesmo formato do site
-    const nota = `Instagram: ${instagram}
-Faturamento: ${faturamento}
+    // 3. Criar Nota
+    const nota = `Instagram: ${instagram || '(não informado)'}
+Faturamento: ${faturamento || '(não informado)'}
+Segmento: ${segmento || '(não informado)'}
+Já investiu em tráfego: ${investiu_trafego || '(não informado)'}
+Verba mensal de anúncios: ${verba_mensal || '(não informado)'}
 WhatsApp: ${whatsapp}
 Email: ${email}
 
